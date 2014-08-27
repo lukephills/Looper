@@ -1,5 +1,5 @@
 
-var init = function() {
+var Looper = function() {
 
 
 	//VARIABLES							
@@ -13,33 +13,24 @@ var init = function() {
 		loopRepetition,
 		overdubs = [],
 
-		// START NEW AUDIO CONTEXT
-		audioContext = new AudioContext;
-
-
-		// DEFINE NODES
-		LooperInput = audioContext.createGain();
-		LooperOutput = audioContext.createGain();
-		Recorder = new Recorder(LooperInput);
 		
 
-		// INITIAL CONNECTIONS
-		LooperInput.gain.value = 0.5;
-		LooperInput.connect(LooperOutput);
-		
-		LooperOutput.gain.value = 1;
-		LooperOutput.connect(audioContext.destination);
-		
+	playSound = function() {
+		console.log('playing');
+		osc = audioContext.createOscillator();
+		osc.connect(LooperInput);
+		osc.start(0);
+	},
+
+	stopSound = function() {
+		console.log('stopped');
+		osc.stop(0);
+		// osc.disconnect();
+	},
 
 
 
-
-		
-
-
-
-
-	var recordSound = function() {
+	recordSound = function() {
 
 		if (!playback) {
 			// NOT RECORDING YET
@@ -62,7 +53,9 @@ var init = function() {
 		}
 
 
-	}
+	},
+
+
 
 	overdub = function() {
 
@@ -72,7 +65,9 @@ var init = function() {
 
 		// play last recording on loop
 		playLastRecording();
-	}
+	},
+
+
 
 	playLastRecording = function() {
 
@@ -122,9 +117,10 @@ var init = function() {
 
 		});
 
-	}
+	},
 
-	var stop = function() {
+
+	stop = function() {
 
 		// IF WE ARE PLAYING
 		if (playback) {
@@ -143,10 +139,10 @@ var init = function() {
 			// WE ARE ALREADY STOPPED SO DO NOTHING
 
 		}
-	}
+	},
 
 
-	var play = function() {
+	play = function() {
 		
 		// IF NOT ALREADY PLAYING
 		if (!playback) {
@@ -163,33 +159,50 @@ var init = function() {
 			// WE ARE ALREADY PLAYING SO DO NOTHING
 			return;
 		}
+	},
+
+
+
+	setListeners = function() {
+
+		// EVENT LISTENERS
+		document.getElementById('record').addEventListener('click', recordSound, false);
+		// document.getElementById('play').addEventListener('click', play, false);
+		// document.getElementById('stop').addEventListener('click', stop, false);
+		document.getElementById('sound').addEventListener('mousedown', playSound, false);
+		document.getElementById('sound').addEventListener('mouseup', stopSound, false);
+
+	},
+	
+
+
+
+	// SETUP AUDIO CONTEXT & CONNECT NODES
+
+	init = function() {
+
+		// START NEW AUDIO CONTEXT
+		audioContext = new AudioContext;
+
+
+		// DEFINE NODES
+		LooperInput = audioContext.createGain();
+		LooperOutput = audioContext.createGain();
+		Recorder = new Recorder(LooperInput);
+		
+
+		// INITIAL CONNECTIONS
+		LooperInput.gain.value = 0.5;
+		LooperInput.connect(LooperOutput);
+		
+		LooperOutput.gain.value = 1;
+		LooperOutput.connect(audioContext.destination);
+
+		setListeners();
 	}
 
-
-
-	playSound = function() {
-		console.log('playing');
-		osc = audioContext.createOscillator();
-		osc.connect(LooperInput);
-		osc.start(0);
-	}
-
-	stopSound = function() {
-		console.log('stopped');
-		osc.stop(0);
-		// osc.disconnect();
-	}
-
-
-
-	// EVENT LISTENERS
-	document.getElementById('record').addEventListener('click', recordSound, false);
-	// document.getElementById('play').addEventListener('click', play, false);
-	// document.getElementById('stop').addEventListener('click', stop, false);
-	document.getElementById('sound').addEventListener('mousedown', playSound, false);
-	document.getElementById('sound').addEventListener('mouseup', stopSound, false);
-
-
+	init();
+	
 }
 
 
