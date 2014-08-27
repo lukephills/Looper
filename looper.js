@@ -1,5 +1,5 @@
 
-var Looper = function() {
+var Looper = (function() {
 
 
 	//VARIABLES							
@@ -148,9 +148,9 @@ var Looper = function() {
 		if (!playback) {
 
 			// PLAY ALL LOOPS
-			for (i = 0; i < Recorder.Array.length; i++){
-				Recorder[i].play();
-			}
+			// for (i = 0; i < Recorder.Array.length; i++){
+			// 	Recorder[i].play();
+			// }
 
 			playback = true;
 
@@ -203,7 +203,7 @@ var Looper = function() {
 
 	init();
 	
-}
+}());
 
 
 
